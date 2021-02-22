@@ -1,5 +1,6 @@
 #script for figures for the presentation
-#start in proj directory
+#do after Pop_occupancy_3_site.R
+
 
 library(tidyverse)
 library(cowplot)
@@ -29,7 +30,7 @@ ggplot(pop, aes(x=year, y=n, color = Model)) +
   scale_fill_brewer(palette="Dark2") +
   xlim(20,100) +
   scale_y_continuous(labels = scales::comma, limits = c(0, 100000)) +
-  theme_classic(base_size = 40)
+  theme_classic(base_size = 16)
 
 ggsave(filename = "pop1.png", plot = last_plot(), dpi = 400, width = 10, height = 8, units = "in")
 
@@ -167,3 +168,27 @@ my_plot <- ggplot(data=data_plot, aes(x = year, y = value, color=as.factor(Allel
 
 ggsave(my_plot, filename=paste("frequencies",i,".png",sep=""),dpi = 400, width = 10, height = 8, units = "in")
 }
+
+
+#as opposed to comparing frequencies in a site, can also compare across sites by making df separated by runs
+
+for (i in unique(df_plot_final$run)) {
+  run = i 
+  
+  data_plot <- df_plot_final %>%
+    filter(run == i)
+  
+  my_plot <- ggplot(data=data_plot, aes(x = year, y = value, color=as.factor(Allele), fill=as.factor(Allele), shape=as.factor(Allele))) +
+    geom_point(size=4, alpha=0.55) +
+    geom_line(size=1.25)+
+    facet_grid(rows = vars(loc), cols = vars(Locus)) +
+    labs(x = "Time (years)", y = "Allele Proportion", color="Allele", fill="Allele", shape="Allele") +
+    ggtitle(paste("Run",i,sep = " ")) +
+    scale_color_brewer(palette = "Dark2")+
+    theme_bw(base_size=14)
+  
+  ggsave(my_plot, filename=paste("site_compare",i,".png",sep=""),dpi = 400, width = 10, height = 8, units = "in")
+}
+
+
+#as opposed to comparing frequencies in a site, can also compare across sites by making df separated by runs

@@ -1,0 +1,655 @@
+
+CDmetaPOP Release 2020.05.12-14:27:01MST Version version 1.52
+
+Author(s): Erin L Landguth, Casey Day, Andrew Bearlin
+
+Session runtime inputs from: ../../../src/inputs_demo/popvar_test_plast_off.csv
+
+
+DoUserInput(): 0:00:00
+DoPreProcess(): 0:00:00.015000
+GetMetrics() Initial: 0:00:00.002000
+The file ind-1.csv has been created
+DoUpdate(): 0:00:00.004000
+DoCDClimate(): 0:00:00.006000
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+The file ind0.csv has been created
+Second DoUpdate(): 0:00:00.007000
+DoEmigration(): 0:00:00.008000
+DoOutMortality(): 0:00:00
+The file ind0.csv has been created
+Third DoUpdate(): 0:00:00.004000
+DoImmigration(): 0:00:00.011000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop0: 0:00:00.050000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.008000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.011000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop1: 0:00:00.033000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.009000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.009000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.002000
+End Generation/Year Loop2: 0:00:00.032000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.006000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop3: 0:00:00.025000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.007000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.003000
+End Generation/Year Loop4: 0:00:00.026000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00
+The file ind5.csv has been created
+Second DoUpdate(): 0:00:00.004000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+The file ind5.csv has been created
+Third DoUpdate(): 0:00:00.005000
+DoImmigration(): 0:00:00.018000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop5: 0:00:00.045000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.002000
+DoImmigration(): 0:00:00.010000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop6: 0:00:00.033000
+
+DoCDClimate(): 0:00:00.001000
+DoMate(): 0:00:00.003000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.008000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.010000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop7: 0:00:00.033000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.004000
+DoOffspring(): 0:00:00
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.008000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.002000
+DoImmigration(): 0:00:00.017000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop8: 0:00:00.045000
+
+DoCDClimate(): 0:00:00.001000
+DoMate(): 0:00:00.003000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.008000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.009000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.002000
+End Generation/Year Loop9: 0:00:00.036000
+
+DoCDClimate(): 0:00:00.001000
+DoMate(): 0:00:00.004000
+DoOffspring(): 0:00:00.001000
+The file ind10.csv has been created
+Second DoUpdate(): 0:00:00.009000
+DoEmigration(): 0:00:00.008000
+DoOutMortality(): 0:00:00
+The file ind10.csv has been created
+Third DoUpdate(): 0:00:00.004000
+DoImmigration(): 0:00:00.010000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop10: 0:00:00.045000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.005000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.005000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.002000
+DoImmigration(): 0:00:00.008000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop11: 0:00:00.032000
+
+DoCDClimate(): 0:00:00.001000
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.002000
+DoImmigration(): 0:00:00.008000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop12: 0:00:00.029000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.007000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop13: 0:00:00.024000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.014000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop14: 0:00:00.035000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+The file ind15.csv has been created
+Second DoUpdate(): 0:00:00.005000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+The file ind15.csv has been created
+Third DoUpdate(): 0:00:00.003000
+DoImmigration(): 0:00:00.010000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop15: 0:00:00.035000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.001000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.002000
+DoImmigration(): 0:00:00.010000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop16: 0:00:00.034000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.005000
+DoOutMortality(): 0:00:00.001000
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.007000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop17: 0:00:00.028000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.008000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop18: 0:00:00.026000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.001000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.010000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop19: 0:00:00.030000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+The file ind20.csv has been created
+Second DoUpdate(): 0:00:00.005000
+DoEmigration(): 0:00:00.012000
+DoOutMortality(): 0:00:00
+The file ind20.csv has been created
+Third DoUpdate(): 0:00:00.002000
+DoImmigration(): 0:00:00.010000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop20: 0:00:00.041000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.008000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop21: 0:00:00.028000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.008000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop22: 0:00:00.029000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.002000
+DoImmigration(): 0:00:00.014000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.002000
+End Generation/Year Loop23: 0:00:00.035000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.010000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop24: 0:00:00.030000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+The file ind25.csv has been created
+Second DoUpdate(): 0:00:00.010000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+The file ind25.csv has been created
+Third DoUpdate(): 0:00:00.004000
+DoImmigration(): 0:00:00.014000
+DoInMortality(): 0:00:00.001000
+GetMetrics(): 0:00:00.002000
+End Generation/Year Loop25: 0:00:00.050000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.002000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.009000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop26: 0:00:00.032000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.010000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.002000
+DoImmigration(): 0:00:00.009000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop27: 0:00:00.034000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.003000
+DoOffspring(): 0:00:00.002000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.008000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.007000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.002000
+End Generation/Year Loop28: 0:00:00.031000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.003000
+DoOffspring(): 0:00:00
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.018000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop29: 0:00:00.038000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+The file ind30.csv has been created
+Second DoUpdate(): 0:00:00.004000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+The file ind30.csv has been created
+Third DoUpdate(): 0:00:00.004000
+DoImmigration(): 0:00:00.018000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.002000
+End Generation/Year Loop30: 0:00:00.045000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.008000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.008000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.002000
+End Generation/Year Loop31: 0:00:00.029000
+
+DoCDClimate(): 0:00:00.001000
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.002000
+DoImmigration(): 0:00:00.009000
+DoInMortality(): 0:00:00.001000
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop32: 0:00:00.030000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.010000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop33: 0:00:00.031000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.003000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.008000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop34: 0:00:00.031000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+The file ind35.csv has been created
+Second DoUpdate(): 0:00:00.005000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+The file ind35.csv has been created
+Third DoUpdate(): 0:00:00.005000
+DoImmigration(): 0:00:00.008000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.002000
+End Generation/Year Loop35: 0:00:00.037000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.003000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.002000
+DoImmigration(): 0:00:00.008000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop36: 0:00:00.031000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.004000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.004000
+DoImmigration(): 0:00:00.009000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop37: 0:00:00.033000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.008000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop38: 0:00:00.030000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.002000
+DoImmigration(): 0:00:00.008000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.002000
+End Generation/Year Loop39: 0:00:00.029000
+
+DoCDClimate(): 0:00:00.001000
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+The file ind40.csv has been created
+Second DoUpdate(): 0:00:00.005000
+DoEmigration(): 0:00:00.009000
+DoOutMortality(): 0:00:00
+The file ind40.csv has been created
+Third DoUpdate(): 0:00:00.003000
+DoImmigration(): 0:00:00.016000
+DoInMortality(): 0:00:00.001000
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop40: 0:00:00.044000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.008000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop41: 0:00:00.029000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.006000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.007000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop42: 0:00:00.028000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.007000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.003000
+End Generation/Year Loop43: 0:00:00.030000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.008000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.008000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.002000
+End Generation/Year Loop44: 0:00:00.030000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.003000
+DoOffspring(): 0:00:00
+The file ind45.csv has been created
+Second DoUpdate(): 0:00:00.005000
+DoEmigration(): 0:00:00.014000
+DoOutMortality(): 0:00:00
+The file ind45.csv has been created
+Third DoUpdate(): 0:00:00.005000
+DoImmigration(): 0:00:00.010000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop45: 0:00:00.048000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.008000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.002000
+DoImmigration(): 0:00:00.009000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.003000
+End Generation/Year Loop46: 0:00:00.034000
+
+DoCDClimate(): 0:00:00.001000
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.002000
+DoEmigration(): 0:00:00.008000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.012000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.002000
+End Generation/Year Loop47: 0:00:00.034000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.002000
+DoImmigration(): 0:00:00.009000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop48: 0:00:00.032000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00
+Second DoUpdate(): 0:00:00.001000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+Third DoUpdate(): 0:00:00.001000
+DoImmigration(): 0:00:00.011000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.003000
+End Generation/Year Loop49: 0:00:00.032000
+
+DoCDClimate(): 0:00:00
+DoMate(): 0:00:00.002000
+DoOffspring(): 0:00:00.001000
+The file ind50.csv has been created
+Second DoUpdate(): 0:00:00.005000
+DoEmigration(): 0:00:00.007000
+DoOutMortality(): 0:00:00
+The file ind50.csv has been created
+Third DoUpdate(): 0:00:00.003000
+DoImmigration(): 0:00:00.009000
+DoInMortality(): 0:00:00
+GetMetrics(): 0:00:00.001000
+End Generation/Year Loop50: 0:00:00.036000
+
+The file summary_popAllTime.csv has been created
+The file summary_classAllTime.csv has been created
+DoPostProcess(): 0:00:00.011000
+End Monte Carlo Loop0: 0:00:01.848000
+
+End Batch Loop0: 0:00:01.851000
+
+Total CDmetaPOP Simulation Time: 0:00:01.855000

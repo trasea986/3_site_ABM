@@ -193,3 +193,46 @@ for (i in unique(data_viz_ll_df_desert$year)) {
 
 
 
+
+#for animation comparing the dry and keithley
+dry_cool_df <- rbind(data_viz_ll_df_cool, data_viz_ll_df_desert)
+
+dry_cool_df <- dry_cool_df %>%
+  filter(run == "sel-plast")
+
+dry_cool_df$loc <- plyr::revalue(dry_cool_df$loc, c("cool"="Keithley/Mann", "desert"="Jacks' Creeks"))
+
+for (i in unique(dry_cool_df$year)) {
+  year = i 
+  
+  data_plot <- dry_cool_df %>%
+    filter(year == i)
+  
+  myplot1 <- p_desert + 
+    geom_path(data = stream_fort, aes(long, lat, group = group), color = "lightblue") +
+    geom_point(data = data_plot, aes(x = XCOORD, y = YCOORD, size = n, alpha = n), color = "black", fill = "red", shape = 21) +
+    scale_size_continuous(range = c(1, 8)) +
+    scale_alpha_continuous(range = c(0.25, .75)) +
+    theme(legend.position = "none") +
+    ylab("Latitude") +
+    xlab("Longitude") +
+    ggtitle(paste("Jacks' Creeks, Year",i,sep = " ")) +
+    theme_bw(base_size = 14)+
+    theme(legend.position = "none")
+  
+  myplot2 <- p_cool + 
+    geom_path(data = stream_fort, aes(long, lat, group = group), color = "lightblue") +
+    geom_point(data = data_plot, aes(x = XCOORD, y = YCOORD, size = n, alpha = n), color = "black", fill = "red", shape = 21) +
+    scale_size_continuous(range = c(1, 8)) +
+    scale_alpha_continuous(range = c(0.25, .75)) +
+    theme(legend.position = "none") +
+    ylab("Latitude") +
+    xlab("Longitude") +
+    ggtitle(paste("Keithley/Mann Creeks, Year",i,sep = " ")) +
+    theme_bw(base_size = 14)+
+    theme(legend.position = "none")
+
+  myplots <- plot_grid(myplot1, myplot2)
+    
+  ggsave(myplots, filename=paste("Cool-Desert",i,".png",sep=""),dpi = 600, width = 10, height = 8, units = "in")
+}

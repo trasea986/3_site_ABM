@@ -1,6 +1,6 @@
 # script to determine occupancy
 
-setwd("../outputs")
+
 
 library(tidyverse)
 library(cowplot)
@@ -9,6 +9,26 @@ library(rgdal)
 library(rgeos)
 library(maptools)
 
+#read in input file to pull in temperature values for each of patches. this does not vary across scenarios.
+
+setwd("../inputs/null")
+
+patchvars_cool <- read.csv("patchvars_cool.csv")
+patchvars_desert <- read.csv("patchvars_desert.csv")
+patchvars_dry <- read.csv("patchvars_dry.csv")
+patchvars <- rbind(patchvars_cool, patchvars_desert, patchvars_dry)
+
+#need to subset for left_join memory issues
+patchvars <- patchvars %>%
+  select(X, Y, GrowthTemperatureBack)
+
+#then a little renaming
+patchvars$XCOORD <- patchvars$X
+patchvars$YCOORD <- patchvars$Y
+patchvars$Y <- NULL
+patchvars$X <- NULL
+
+setwd("../../outputs/3_site")
 
 output_files = list.files(pattern = paste(".csv", sep=''), 
                           full.names = TRUE, 
@@ -52,19 +72,18 @@ data_df$year <- as.numeric(data_df$year)
 data_df$XCOORD <- as.numeric(data_df$XCOORD)
 data_df$YCOORD <- as.numeric(data_df$YCOORD)
 
-
-
 #summarize for maps
-
 for_viz <- data_df %>%
 group_by(PatchID, XCOORD, YCOORD, year, loc, run, .drop = FALSE) %>% 
   summarise(n = n())
+
+#bring in temperature column from patchvars
+for_viz <- merge(x=for_viz, y=patchvars, by=c("XCOORD", "YCOORD"))
 
 for_stat <- data_df %>%
   group_by(year, loc, run, .drop = FALSE) %>% 
   summarise(n = n())
 
-#data_viz_test <- for_viz %>% filter(Year == 10)
 
 #copied coordinates from ArcGIS Pro fro 
 #Dry Creek
@@ -102,6 +121,12 @@ data_viz_ll_df$n <- for_viz$n
 data_viz_ll_df$year <- for_viz$year
 data_viz_ll_df$loc <- for_viz$loc
 data_viz_ll_df$run <- for_viz$run
+data_viz_ll_df$GrowthTemperatureBack <- for_viz$GrowthTemperatureBack
+
+#add in stream layer data
+stream <- readOGR("../../data_gis/NorWeST_PredictedStreamTempLines_MiddleSnake.shp")
+stream_repro <- spTransform(stream, CRS("+proj=longlat +datum=WGS84"))
+stream_fort <- fortify(stream_repro)
 
 #sep by location
 data_viz_ll_df_dry <- data_viz_ll_df %>%
@@ -111,128 +136,238 @@ data_viz_ll_df_cool <- data_viz_ll_df %>%
 data_viz_ll_df_desert <- data_viz_ll_df %>%
   filter(loc == "desert")
 
+#one problem with points is that it is hard to see due to overlap. remove points
+data_viz_ll_df_desert <- data_viz_ll_df_desert %>% 
+  group_by(run) %>%
+  sample_frac(0.2, replace = FALSE)
+data_viz_ll_df_cool <- data_viz_ll_df_cool %>% 
+  group_by(run) %>%
+  sample_frac(0.2, replace = FALSE)
+data_viz_ll_df_dry <- data_viz_ll_df_dry %>% 
+  group_by(run) %>%
+  sample_frac(0.2, replace = FALSE)
+
+#next, we are going to single out the first (10) and last years (100) of the model
+data_viz_ll_df_desert <- data_viz_ll_df_desert %>% 
+  filter(year == 10 | year == 100)
+data_viz_ll_df_cool <- data_viz_ll_df_cool %>% 
+  filter(year == 10 | year == 100)
+data_viz_ll_df_dry <- data_viz_ll_df_dry %>% 
+  filter(year == 10 | year == 100)
 
 
-#add in stream layer data
-stream <- readOGR("../data_gis/NorWeST_PredictedStreamTempLines_MiddleSnake.shp")
-stream_repro <- spTransform(stream, CRS("+proj=longlat +datum=WGS84"))
-stream_fort <- fortify(stream_repro)
+#now to split the temp up based on the input requirements
+#some of the inputs have " | " and some have "|" and some have "  |  ". Also, seem to glitch when separating by | so change to "/" before that step.
+
+data_viz_ll_df_desert$GrowthTemperatureBack <- gsub(pattern="|", replacement=" | ", data_viz_ll_df_desert$GrowthTemperatureBack, fixed = TRUE)
+data_viz_ll_df_desert$GrowthTemperatureBack <- gsub(pattern="  |  ", replacement=" | ", data_viz_ll_df_desert$GrowthTemperatureBack, fixed = TRUE)
+data_viz_ll_df_desert$GrowthTemperatureBack <- gsub(pattern=" | ", replacement="/", data_viz_ll_df_desert$GrowthTemperatureBack, fixed = TRUE)
+data_viz_ll_df_desert<- separate(data_viz_ll_df_desert, col = GrowthTemperatureBack, into = c('C10', 'mid', 'C100'), sep = "/")
+
+data_viz_ll_df_dry$GrowthTemperatureBack <- gsub(pattern="|", replacement=" | ", data_viz_ll_df_dry$GrowthTemperatureBack, fixed = TRUE)
+data_viz_ll_df_dry$GrowthTemperatureBack <- gsub(pattern="  |  ", replacement=" | ", data_viz_ll_df_dry$GrowthTemperatureBack, fixed = TRUE)
+data_viz_ll_df_dry$GrowthTemperatureBack <- gsub(pattern=" | ", replacement="/", data_viz_ll_df_dry$GrowthTemperatureBack, fixed = TRUE)
+data_viz_ll_df_dry<- separate(data_viz_ll_df_dry, col = GrowthTemperatureBack, into = c('C10', 'mid', 'C100'), sep = "/")
+
+data_viz_ll_df_cool$GrowthTemperatureBack <- gsub(pattern="|", replacement=" | ", data_viz_ll_df_cool$GrowthTemperatureBack, fixed = TRUE)
+data_viz_ll_df_cool$GrowthTemperatureBack <- gsub(pattern="  |  ", replacement=" | ", data_viz_ll_df_cool$GrowthTemperatureBack, fixed = TRUE)
+data_viz_ll_df_cool$GrowthTemperatureBack <- gsub(pattern=" | ", replacement="/", data_viz_ll_df_cool$GrowthTemperatureBack, fixed = TRUE)
+data_viz_ll_df_cool<- separate(data_viz_ll_df_cool, col = GrowthTemperatureBack, into = c('C10', 'mid', 'C100'), sep = "/")
+
+#change to numeric and delete unwanted column
+data_viz_ll_df_desert$mid <- NULL
+data_viz_ll_df_desert$C10 <- as.numeric(data_viz_ll_df_desert$C10)
+data_viz_ll_df_desert$C100 <- as.numeric(data_viz_ll_df_desert$C100)
+
+data_viz_ll_df_cool$mid <- NULL
+data_viz_ll_df_cool$C10 <- as.numeric(data_viz_ll_df_cool$C10)
+data_viz_ll_df_cool$C100 <- as.numeric(data_viz_ll_df_cool$C100)
+
+data_viz_ll_df_dry$mid <- NULL
+data_viz_ll_df_dry$C10 <- as.numeric(data_viz_ll_df_dry$C10)
+data_viz_ll_df_dry$C100 <- as.numeric(data_viz_ll_df_dry$C100)
+
+#next step is to then give the numeric ranges the threshold values
+data_viz_ll_df_desert$C10_thresh  <- cut(data_viz_ll_df_desert$C10, breaks = c(-50, 18, 20, 50), labels = c("Cold", "Trigger", "Avoid"))
+data_viz_ll_df_desert$C100_thresh <- cut(data_viz_ll_df_desert$C100, breaks = c(-50, 18, 20, 50), labels = c("Cold", "Trigger", "Avoid"))
+
+data_viz_ll_df_dry$C10_thresh  <- cut(data_viz_ll_df_dry$C10, breaks = c(-50, 18, 20, 50), labels = c("Cold", "Trigger", "Avoid"))
+data_viz_ll_df_dry$C100_thresh  <- cut(data_viz_ll_df_dry$C100, breaks = c(-50, 18, 20, 50), labels = c("Cold", "Trigger", "Avoid"))
+
+data_viz_ll_df_cool$C10_thresh  <- cut(data_viz_ll_df_cool$C10, breaks = c(-50, 18, 20, 50), labels = c("Cold", "Trigger", "Avoid"))
+data_viz_ll_df_cool$C100_thresh  <- cut(data_viz_ll_df_cool$C100, breaks = c(-50, 18, 20, 50), labels = c("Cold", "Trigger", "Avoid"))
 
 
 
-#dry creek test
-for (i in unique(data_viz_ll_df_dry$year)) {
-  year = i 
-  
-  data_plot <- data_viz_ll_df_dry %>%
-    filter(year == i)
-  
-  myplot <- p_dry + 
-    geom_path(data = stream_fort, aes(long, lat, group = group), color = "lightblue") +
-  geom_point(data = data_plot, aes(x = XCOORD, y = YCOORD, size = n, alpha = n), color = "black", fill = "red", shape = 21) +
-    facet_wrap(~run) +
-  scale_size_continuous(range = c(1, 8)) +
-  scale_alpha_continuous(range = c(0.25, .75)) +
+
+#Now to make the maps for the filtered years. see loop on bottom, but problem is getting alignment/only using certain combinations of C and Year.
+
+data_viz_ll_df_desert_10 <- data_viz_ll_df_desert %>%
+  filter(year == 10)
+
+JacksCreek10 <- p_desert + 
+  geom_path(data = stream_fort, aes(long, lat, group = group), color = "steelblue2") +
+  geom_point(data = data_viz_ll_df_desert_10, aes(x = XCOORD, y = YCOORD, size = n, alpha = n, fill = C10_thresh), color = "black", shape = 21) +
+  facet_wrap(~run) +
+  scale_size_continuous(range = c(2, 6)) +
+  scale_fill_manual(values = c("blue", "orange", "red")) +
+  scale_alpha_continuous(range = c(0.15, .85)) +
   theme(legend.position = "none") +
   ylab("Latitude") +
   xlab("Longitude") +
-  ggtitle(paste("Dry Creek",i,sep = " ")) +
+  ggtitle(paste("Jack's Creek","10",sep = " ")) +
   theme_bw(base_size = 14)+
   theme(legend.position = "none")
-  
-  ggsave(myplot, filename=paste("DryCreek",i,".png",sep=""),dpi = 400, width = 10, height = 8, units = "in")
-}
+ggsave(
+  JacksCreek10, filename=paste("JacksCreek","10",".png",sep=""),dpi = 400, width = 10, height = 8, units = "in")
+
+data_viz_ll_df_desert_100 <- data_viz_ll_df_desert %>%
+  filter(year == 100)
+
+JacksCreek100 <-  p_desert + 
+  geom_path(data = stream_fort, aes(long, lat, group = group), color = "steelblue2") +
+  geom_point(data = data_viz_ll_df_desert_100, aes(x = XCOORD, y = YCOORD, size = n, alpha = n, fill = C100_thresh), color = "black", shape = 21) +
+  facet_wrap(~run) +
+  scale_size_continuous(range = c(2, 6)) +
+  scale_fill_manual(values = c("blue", "orange", "red")) +
+  scale_alpha_continuous(range = c(0.15, .85)) +
+  theme(legend.position = "none") +
+  ylab("Latitude") +
+  xlab("Longitude") +
+  ggtitle(paste("Jack's Creek","100",sep = " ")) +
+  theme_bw(base_size = 14)+
+  theme(legend.position = "none")
+
+ggsave(JacksCreek100, filename=paste("JacksCreek","100",".png",sep=""),dpi = 400, width = 10, height = 8, units = "in")
 
 
-#cool creek test
-for (i in unique(data_viz_ll_df_cool$year)) {
-  year = i 
-  
-  data_plot <- data_viz_ll_df_cool %>%
-    filter(year == i)
-  
-  myplot <- p_cool + 
-    geom_path(data = stream_fort, aes(long, lat, group = group), color = "lightblue") +
-    geom_point(data = data_plot, aes(x = XCOORD, y = YCOORD, size = n, alpha = n), color = "black", fill = "red", shape = 21) +
-    facet_wrap(~run) +
-    scale_size_continuous(range = c(1, 8)) +
-    scale_alpha_continuous(range = c(0.25, .75)) +
-    theme(legend.position = "none") +
-    ylab("Latitude") +
-    xlab("Longitude") +
-    ggtitle(paste("Keithley/Mann Creek",i,sep = " ")) +
-    theme_bw(base_size = 14)+
-    theme(legend.position = "none")
-  
-  ggsave(myplot, filename=paste("Cool",i,".png",sep=""),dpi = 400, width = 10, height = 8, units = "in")
-}
+data_viz_ll_df_dry_10 <- data_viz_ll_df_dry %>%
+  filter(year == 10)
 
+DryCreek10 <- p_dry + 
+  geom_path(data = stream_fort, aes(long, lat, group = group), color = "steelblue2") +
+  geom_point(data = data_viz_ll_df_dry_10, aes(x = XCOORD, y = YCOORD, size = n, alpha = n, fill = C10_thresh), color = "black", shape = 21) +
+  facet_wrap(~run) +
+  scale_size_continuous(range = c(2, 6)) +
+  scale_fill_manual(values = c("blue", "orange", "red")) +
+  scale_alpha_continuous(range = c(0.15, .85)) +
+  theme(legend.position = "none") +
+  ylab("Latitude") +
+  xlab("Longitude") +
+  ggtitle(paste("Dry Creek","10",sep = " ")) +
+  theme_bw(base_size = 14)+
+  theme(legend.position = "none")
+ggsave(
+  DryCreek10, filename=paste("DryCreek","10",".png",sep=""),dpi = 400, width = 10, height = 8, units = "in")
 
-#desert creek test
-for (i in unique(data_viz_ll_df_desert$year)) {
-  year = i 
-  
-  data_plot <- data_viz_ll_df_desert %>%
-    filter(year == i)
-  
-  myplot <- p_desert + 
-    geom_path(data = stream_fort, aes(long, lat, group = group), color = "lightblue") +
-    geom_point(data = data_plot, aes(x = XCOORD, y = YCOORD, size = n, alpha = n), color = "black", fill = "red", shape = 21) +
-    facet_wrap(~run) +
-    scale_size_continuous(range = c(1, 8)) +
-    scale_alpha_continuous(range = c(0.25, .75)) +
-    theme(legend.position = "none") +
-    ylab("Latitude") +
-    xlab("Longitude") +
-    ggtitle(paste("Jack's Creek",i,sep = " ")) +
-    theme_bw(base_size = 14)+
-    theme(legend.position = "none")
-  
-  ggsave(myplot, filename=paste("Desert",i,".png",sep=""),dpi = 400, width = 10, height = 8, units = "in")
-}
+data_viz_ll_df_dry_100 <- data_viz_ll_df_dry %>%
+  filter(year == 100)
+
+DryCreek100 <-  p_dry + 
+  geom_path(data = stream_fort, aes(long, lat, group = group), color = "steelblue2") +
+  geom_point(data = data_viz_ll_df_dry_100, aes(x = XCOORD, y = YCOORD, size = n, alpha = n, fill = C100_thresh), color = "black", shape = 21) +
+  facet_wrap(~run) +
+  scale_size_continuous(range = c(2, 6)) +
+  scale_fill_manual(values = c("blue", "orange", "red")) +
+  scale_alpha_continuous(range = c(0.15, .85)) +
+  theme(legend.position = "none") +
+  ylab("Latitude") +
+  xlab("Longitude") +
+  ggtitle(paste("Dry Creek","100",sep = " ")) +
+  theme_bw(base_size = 14)+
+  theme(legend.position = "none")
+
+ggsave(DryCreek100, filename=paste("DryCreek","100",".png",sep=""),dpi = 400, width = 10, height = 8, units = "in")
 
 
 
+data_viz_ll_df_cool_10 <- data_viz_ll_df_cool %>%
+  filter(year == 10)
 
-#for animation comparing the dry and keithley
-dry_cool_df <- rbind(data_viz_ll_df_cool, data_viz_ll_df_desert)
+KMCreek10 <- p_cool + 
+  geom_path(data = stream_fort, aes(long, lat, group = group), color = "steelblue2") +
+  geom_point(data = data_viz_ll_df_cool_10, aes(x = XCOORD, y = YCOORD, size = n, alpha = n, fill = C10_thresh), color = "black", shape = 21) +
+  facet_wrap(~run) +
+  scale_size_continuous(range = c(2, 6)) +
+  scale_fill_manual(values = c("blue", "orange", "red")) +
+  scale_alpha_continuous(range = c(0.15, .85)) +
+  theme(legend.position = "none") +
+  ylab("Latitude") +
+  xlab("Longitude") +
+  ggtitle(paste("Keithley/Mann Creek","10",sep = " ")) +
+  theme_bw(base_size = 14)+
+  theme(legend.position = "none")
+ggsave(
+  KMCreek10, filename=paste("KMCreek","10",".png",sep=""),dpi = 400, width = 10, height = 8, units = "in")
 
-dry_cool_df <- dry_cool_df %>%
-  filter(run == "sel-plast")
 
-dry_cool_df$loc <- plyr::revalue(dry_cool_df$loc, c("cool"="Keithley/Mann", "desert"="Jacks' Creeks"))
+data_viz_ll_df_cool_100 <- data_viz_ll_df_cool %>%
+  filter(year == 100)
 
-for (i in unique(dry_cool_df$year)) {
-  year = i 
-  
-  data_plot <- dry_cool_df %>%
-    filter(year == i)
-  
-  myplot1 <- p_desert + 
-    geom_path(data = stream_fort, aes(long, lat, group = group), color = "lightblue") +
-    geom_point(data = data_plot, aes(x = XCOORD, y = YCOORD, size = n, alpha = n), color = "black", fill = "red", shape = 21) +
-    scale_size_continuous(range = c(1, 8)) +
-    scale_alpha_continuous(range = c(0.25, .75)) +
-    theme(legend.position = "none") +
-    ylab("Latitude") +
-    xlab("Longitude") +
-    ggtitle(paste("Jacks' Creeks, Year",i,sep = " ")) +
-    theme_bw(base_size = 14)+
-    theme(legend.position = "none")
-  
-  myplot2 <- p_cool + 
-    geom_path(data = stream_fort, aes(long, lat, group = group), color = "lightblue") +
-    geom_point(data = data_plot, aes(x = XCOORD, y = YCOORD, size = n, alpha = n), color = "black", fill = "red", shape = 21) +
-    scale_size_continuous(range = c(1, 8)) +
-    scale_alpha_continuous(range = c(0.25, .75)) +
-    theme(legend.position = "none") +
-    ylab("Latitude") +
-    xlab("Longitude") +
-    ggtitle(paste("Keithley/Mann Creeks, Year",i,sep = " ")) +
-    theme_bw(base_size = 14)+
-    theme(legend.position = "none")
+KMCreek100 <-  p_cool + 
+  geom_path(data = stream_fort, aes(long, lat, group = group), color = "steelblue2") +
+  geom_point(data = data_viz_ll_df_cool_100, aes(x = XCOORD, y = YCOORD, size = n, alpha = n, fill = C100_thresh), color = "black", shape = 21) +
+  facet_wrap(~run) +
+  scale_size_continuous(range = c(2, 6)) +
+  scale_fill_manual(values = c("blue", "orange", "red")) +
+  scale_alpha_continuous(range = c(0.15, .85)) +
+  theme(legend.position = "none") +
+  ylab("Latitude") +
+  xlab("Longitude") +
+  ggtitle(paste("Keithley/Mann","100",sep = " ")) +
+  theme_bw(base_size = 14)+
+  theme(legend.position = "none")
 
-  myplots <- plot_grid(myplot1, myplot2)
-    
-  ggsave(myplots, filename=paste("Cool-Desert",i,".png",sep=""),dpi = 600, width = 10, height = 8, units = "in")
-}
+ggsave(KMCreek100, filename=paste("KMCreek","100",".png",sep=""),dpi = 400, width = 10, height = 8, units = "in")
+
+
+
+
+#### Below is the loop for the maps. The issue here is that the C value needs to change depending on the year value
+
+
+#for comparing the desert and keithley
+#dry_cool_df <- rbind(data_viz_ll_df_cool, data_viz_ll_df_desert)
+
+#dry_cool_df <- dry_cool_df %>%
+#  filter(run == "tol-plast")
+
+#dry_cool_df$loc <- plyr::revalue(dry_cool_df$loc, c("cool"="Keithley/Mann", "desert"="Jacks' Creeks"))
+
+
+
+#the below loop is useful if wanting every output as a map
+#for (i in unique(dry_cool_df$year)) {
+#  year = i 
+#  
+#  data_plot <- dry_cool_df %>%
+#    filter(year == i)
+#  
+#  myplot1 <- p_desert + 
+#    geom_path(data = stream_fort, aes(long, lat, group = group), color = "lightblue") +
+#    geom_point(data = data_plot, aes(x = XCOORD, y = YCOORD, size = n, alpha = n), color = "black", fill #= "red", shape = 21) +
+#    scale_size_continuous(range = c(1, 8)) +
+#    scale_alpha_continuous(range = c(0.25, .75)) +
+#    theme(legend.position = "none") +
+#    ylab("Latitude") +
+#    xlab("Longitude") +
+ #   ggtitle(paste("Jacks' Creeks, Year",i,sep = " ")) +
+#    theme_bw(base_size = 14)+
+#    theme(legend.position = "none")
+#  
+#  myplot2 <- p_cool + 
+#    geom_path(data = stream_fort, aes(long, lat, group = group), color = "lightblue") +
+#    geom_point(data = data_plot, aes(x = XCOORD, y = YCOORD, size = n, alpha = n), color = "black", fill #= "red", shape = 21) +
+#    scale_size_continuous(range = c(1, 8)) +
+#    scale_alpha_continuous(range = c(0.25, .75)) +
+#    theme(legend.position = "none") +
+#    ylab("Latitude") +
+#    xlab("Longitude") +
+#    ggtitle(paste("Keithley/Mann Creeks, Year",i,sep = " ")) +
+#    theme_bw(base_size = 14)+
+#    theme(legend.position = "none")
+#  
+#  myplots <- plot_grid(myplot1, myplot2)
+#  
+#  ggsave(myplots, filename=paste("Cool-Desert",i,".png",sep=""),dpi = 600, width = 10, height = 8, units #= "in")
+#}

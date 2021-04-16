@@ -17,7 +17,7 @@ pop$loc <- as.factor(pop$loc)
 pop$loc <- revalue(pop$loc, c("cool"="Keithley/Mann", "dry"="Dry Creek", "desert" = "Jack's Creeks"))
 
 pop$run <- as.factor(pop$run)
-pop$run <- revalue(pop$run, c("null"="Null", "plast"="Plasticity: Habitat Selection", "sel" = "Local Adaptation: Thermal Tolerance", "sel-plast"="Combination"))
+pop$run <- revalue(pop$run, c("null"="Null", "plast"="Plasticity: Habitat Selection", "tol" = "Local Adaptation: Thermal Tolerance", "tol-plast"="Combination"))
 
 
 pop$Model <- pop$run
@@ -149,7 +149,7 @@ df_plot_final <- merge(x=df_plot_final, y=Population, by=c("year", "loc", "run")
 df_plot_final$value <- df_plot_final$value / (2*df_plot_final$n)
 
 
-df_plot_final$run <- revalue(df_plot_final$run, c("null"="Null", "plast"="Plasticity", "sel" = "Local Adaptation", "sel-plast"="Combination"))
+df_plot_final$run <- revalue(df_plot_final$run, c("null"="Null", "plast"="Plasticity", "tol" = "Local Adaptation", "tol-plast"="Combination"))
 
 for (i in unique(df_plot_final$loc)) {
   loc = i 

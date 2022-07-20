@@ -1,11 +1,12 @@
 #visualization of the "demo" inputs on a fake landscape
+#in publication, just shows population, but keeping pieces below as a template for folks who might be interested in viewing plasticity frequencies
 
 library(tidyverse)
 library(cowplot)
 
 
 # plasticity on viz -------------------------------------------------------
-setwd("./inputs_demo/output1616171118")
+setwd("./inputs_hypothetical/output1616171118")
 
 #create list of the outputs created after running CDMetaPOP
 output_files = list.files(pattern = paste("ind*", sep=''), 
@@ -17,6 +18,7 @@ output_files = list.files(pattern = paste("ind*", sep=''),
 
 #break up the column with the file name
 data_df <- separate(data = output_files, col = filename, into = c('junk', 'junk1', 'year'), sep = "/")
+
 
 data_df <- separate(data = data_df, col = year, into = c('ind', 'year'), sep = "d")
 data_df <- separate(data = data_df, col = year, into = c('year', 'junk2'), sep = ".cs")
@@ -80,7 +82,6 @@ space1 <- data_df_plot %>% ggplot(aes(x = XCOORD, y = abs(YCOORD))) +
   theme_bw()
 
 
-
 #next, scripts to create the figure with allele frequencies in each location
 
 #first need the population. can do per patch, but note frequencies very high for 2 in hot due to low sample size
@@ -133,7 +134,7 @@ data_df_L0[is.na(data_df_L0)] = 0
 
 #add pop total column
 
-data_df_L0$pop <- rep(c(data_df_patch_pop$pop))
+data_df_L0$pop <- rep(data_df_patch_pop$pop, times = 3)
 
 data_df_L0_gathered <- gather(data_df_L0, key = "Allele", counts, L0A0:L0A2)
 
@@ -145,7 +146,7 @@ data_df_L1 <- data_df %>%
 
 
 #add in the per patch pop
-data_df_L1$pop <- rep(data_df_patch_pop$pop)
+data_df_L1$pop <- rep(data_df_patch_pop$pop, times = 3)
 
 #gathering the columns of alleles
 data_df_L1_gathered <- gather(data_df_L1, key = "Allele", counts, L1A0:L1A1)
@@ -158,7 +159,7 @@ data_df_gen <- rbind(data_df_L1_gathered, data_df_L0_gathered)
 
 data_df_gen <- separate(data = data_df_gen, col = Allele, into = c('Locus', 'Allele'), sep = 3)
 
-#change L1 and L0 to names that are descritive
+#change L1 and L0 to names that are descriptive
 data_df_gen <- data_df_gen %>% 
   mutate(Locus = replace(Locus, Locus == 'L0A', "Plastic")) %>%
   mutate(Locus = replace(Locus, Locus == 'L1A', "Neutral"))
@@ -206,6 +207,7 @@ pop_time_1 <- data_df_patch_pop %>%
   ggplot(aes(x = year, y = as.numeric(pop))) + 
   geom_line() +
   facet_wrap(~Temperature) +
+  ylim(0,80)+
   ggtitle("Plasticity On")+
   xlab("Year") +
   ylab("Population") +
@@ -215,7 +217,7 @@ pop_time_1 <- data_df_patch_pop %>%
 
 # plasticity off viz ------------------------------------------------------
 
-setwd("../../inputs_demo/no_plast1616196029")
+setwd("../no_plast1616196029")
 output_files = list.files(pattern = paste("ind*", sep=''), 
                           full.names = TRUE, 
                           recursive = TRUE, 
@@ -341,7 +343,7 @@ data_df_L0[is.na(data_df_L0)] = 0
 
 #add pop total column
 
-data_df_L0$pop <- rep(c(data_df_patch_pop$pop))
+data_df_L0$pop <- rep(data_df_patch_pop$pop, times = 3)
 
 data_df_L0_gathered <- gather(data_df_L0, key = "Allele", counts, L0A0:L0A2)
 
@@ -353,7 +355,7 @@ data_df_L1 <- data_df %>%
 
 
 #add in the per patch pop
-data_df_L1$pop <- rep(data_df_patch_pop$pop)
+data_df_L1$pop <- rep(data_df_patch_pop$pop, times = 3)
 
 #gathering the columns of alleles
 data_df_L1_gathered <- gather(data_df_L1, key = "Allele", counts, L1A0:L1A1)
@@ -413,9 +415,12 @@ pop_time_2 <- data_df_patch_pop %>%
   ggplot(aes(x = year, y = as.numeric(pop))) + 
   geom_line() +
   facet_wrap(~Temperature) +
+  ylim(0,80)+
   ggtitle("Plasticity Off")+
   xlab("Year") +
   ylab("Population") +
   theme_bw()
 
-plot_grid(pop_time_1, pop_time_2, labels = c('A', 'B'), ncol = 1)
+my_plot <- plot_grid(pop_time_1, pop_time_2, labels = c('A', 'B'), ncol = 1)
+
+ggsave(my_plot, filename="../../fake_landscape.jpeg" ,dpi = 400, width = 10, height = 8, units = "in")

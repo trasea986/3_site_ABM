@@ -5,13 +5,16 @@
 library(tidyverse)
 library(cowplot)
 library(ggmap)
-library(rgdal)
+#library(rgdal)
 library(rgeos)
 library(maptools)
 
+#rgeos/rgdal being depricated, so trying sf
+#library(sf)
+
 #read in input file to pull in temperature values for each of patches. this does not vary across scenarios.
 
-setwd("../inputs/null")
+setwd("./inputs/null")
 
 patchvars_cool <- read.csv("patchvars_cool.csv")
 patchvars_desert <- read.csv("patchvars_desert.csv")
@@ -28,7 +31,11 @@ patchvars$YCOORD <- patchvars$Y
 patchvars$Y <- NULL
 patchvars$X <- NULL
 
-setwd("../../outputs/3_site")
+setwd("../../../outputs/3_site")
+
+#for bringing in files, important to note the directory strucute:
+#outputs/3_site/cool_null ; cool_plast; so on
+#also make sure no summary files still present
 
 output_files = list.files(pattern = paste(".csv", sep=''), 
                           full.names = TRUE, 
@@ -37,21 +44,10 @@ output_files = list.files(pattern = paste(".csv", sep=''),
   map_df(function(x) read_csv(x, col_types = cols(.default = "c")) %>% mutate(filename=paste(dirname((x)),basename(x),sep="/")))
 
 
+#data_df <- head(output_files) this is useful for testing below when running lots of replicates
+data_df <- output_files
 
-
-#create year and run column from file name
-data_df <- separate(data = output_files, col = filename, into = c('junk', 'run', 'junk1', 'junk2', 'year'), sep = "/")
-
-data_df <- separate(data = data_df, col = year, into = c('ind', 'year'), sep = "d")
-data_df <- separate(data = data_df, col = year, into = c('year', 'junk3'), sep = ".cs")
-data_df <- separate(data = data_df, col = run, into = c('loc', 'run'), sep = "_")
-
-#remove rows from the initialization, initial pop
-data_df <- subset(data_df, data_df$year != -1)
-data_df$junk <- NULL
-data_df$junk1 <- NULL
-data_df$junk2 <- NULL
-data_df$junk3 <- NULL
+#create year and run column from file name after deleting unneccessary rows
 data_df$ID <- NULL
 data_df$sex <- NULL
 data_df$size <- NULL
@@ -66,26 +62,67 @@ data_df$recapture <- NULL
 data_df$SubPatchID <- NULL
 data_df$age <- NULL
 data_df$CDist <- NULL
+
+data_df <- separate(data = output_files, col = filename, into = c('junk', 'run', 'replicate', 'mc', 'year'), sep = "/")
+
+data_df <- separate(data = data_df, col = year, into = c('ind', 'year'), sep = "d")
+data_df <- separate(data = data_df, col = year, into = c('year', 'junk3'), sep = ".cs")
+data_df <- separate(data = data_df, col = run, into = c('loc', 'run'), sep = "_")
+
+#remove rows from the initialization, initial pop
+data_df <- subset(data_df, data_df$year != -1)
+data_df$junk <- NULL
+data_df$junk1 <- NULL
+data_df$junk2 <- NULL
+data_df$junk3 <- NULL
 data_df$loc <- as.factor(data_df$loc)
 data_df$run <- as.factor(data_df$run)
 data_df$year <- as.numeric(data_df$year)
 data_df$XCOORD <- as.numeric(data_df$XCOORD)
 data_df$YCOORD <- as.numeric(data_df$YCOORD)
+data_df$mc <- as.factor(data_df$mc)
+
+saveRDS(data_df, file = "data_df.Rds")
 
 #summarize for maps
 for_viz <- data_df %>%
-group_by(PatchID, XCOORD, YCOORD, year, loc, run, .drop = FALSE) %>% 
+group_by(PatchID, XCOORD, YCOORD, year, loc, run, replicate, mc, .drop = FALSE) %>% 
   summarise(n = n())
+
+for_viz1 <- for_viz %>%
+  group_by(PatchID, XCOORD, YCOORD, year, loc, run, .drop = FALSE) %>%
+  summarize(m = mean(n), sdev = sd(n))
 
 #bring in temperature column from patchvars
-for_viz <- merge(x=for_viz, y=patchvars, by=c("XCOORD", "YCOORD"))
+for_viz1 <- merge(x=for_viz1, y=patchvars, by=c("XCOORD", "YCOORD"))
+
+saveRDS(for_viz1, file = "for_viz.Rds")
 
 for_stat <- data_df %>%
-  group_by(year, loc, run, .drop = FALSE) %>% 
+  group_by(year, loc, run, replicate, mc, .drop = FALSE) %>% 
   summarise(n = n())
 
+saveRDS(for_stat, file = "for_stat.Rds")
 
-#copied coordinates from ArcGIS Pro fro 
+pop <- data_df %>%
+  group_by(year, loc, run, replicate, mc) %>%
+  tally()
+
+#summary stats more useful for plot
+pop1 <- pop %>%
+  group_by(year, loc, run, .drop = FALSE) %>%
+  summarize(m = mean(n), sdev = sd(n))
+
+saveRDS(pop1, file = "pop1.Rds")
+
+#LOAD summary info
+pop <- readRDS('pop1.RDS')
+#LOAD by site
+for_viz <- readRDS('for_viz.RDS')
+
+#from here down can be done locally (although data_df may be too large)
+
+#copied AOI coordinates from ArcGIS Pro for 
 #Dry Creek
 #116.4234612?W 43.6655836?N 
 #116.0662912?W 43.8163286?N 
@@ -114,19 +151,15 @@ p_desert
 
 #change UTM to LONG LAT and add back in n
 coordinates(for_viz) <- ~XCOORD+YCOORD #similar to SpatialPoints
-data_viz_UTM <- SpatialPoints(for_viz, proj4string=CRS("+proj=utm +zone=11 +datum=WGS84")) 
-data_viz_LONGLAT <- spTransform(data_viz_UTM, CRS("+proj=longlat +datum=WGS84"))
+data_viz_UTM <- SpatialPoints(for_viz, proj4string=CRS("+proj=utm +zone=11 +datum=WGS84"))
+data_viz_LONGLAT <- spTransform(data_viz_UTM, CRS("+proj=longlat +datum=WGS84")) #can also be done with spTransform but being depricated
 data_viz_ll_df <- as.data.frame(data_viz_LONGLAT)
-data_viz_ll_df$n <- for_viz$n
+data_viz_ll_df$m <- for_viz$m
 data_viz_ll_df$year <- for_viz$year
 data_viz_ll_df$loc <- for_viz$loc
 data_viz_ll_df$run <- for_viz$run
+data_viz_ll_df$replicate <- for_viz$replicate
 data_viz_ll_df$GrowthTemperatureBack <- for_viz$GrowthTemperatureBack
-
-#add in stream layer data
-stream <- readOGR("../../data_gis/NorWeST_PredictedStreamTempLines_MiddleSnake.shp")
-stream_repro <- spTransform(stream, CRS("+proj=longlat +datum=WGS84"))
-stream_fort <- fortify(stream_repro)
 
 #sep by location
 data_viz_ll_df_dry <- data_viz_ll_df %>%
@@ -137,13 +170,13 @@ data_viz_ll_df_desert <- data_viz_ll_df %>%
   filter(loc == "desert")
 
 #one problem with points is that it is hard to see due to overlap. remove points
-data_viz_ll_df_desert <- data_viz_ll_df_desert %>% 
+data_viz_ll_df_desert <- data_viz_ll_df_desert %>%
   group_by(run) %>%
   sample_frac(0.2, replace = FALSE)
-data_viz_ll_df_cool <- data_viz_ll_df_cool %>% 
+data_viz_ll_df_cool <- data_viz_ll_df_cool %>%
   group_by(run) %>%
   sample_frac(0.2, replace = FALSE)
-data_viz_ll_df_dry <- data_viz_ll_df_dry %>% 
+data_viz_ll_df_dry <- data_viz_ll_df_dry %>%
   group_by(run) %>%
   sample_frac(0.2, replace = FALSE)
 
@@ -207,7 +240,7 @@ data_viz_ll_df_desert_10 <- data_viz_ll_df_desert %>%
 
 JacksCreek10 <- p_desert + 
   geom_path(data = stream_fort, aes(long, lat, group = group), color = "steelblue2") +
-  geom_point(data = data_viz_ll_df_desert_10, aes(x = XCOORD, y = YCOORD, size = n, alpha = n, fill = C10_thresh), color = "black", shape = 21) +
+  geom_point(data = data_viz_ll_df_desert_10, aes(x = XCOORD, y = YCOORD, size = m, fill = C10_thresh), color = "black", shape = 21) +
   facet_wrap(~run) +
   scale_size_continuous(range = c(2, 6)) +
   scale_fill_manual(values = c("blue", "orange", "red")) +
@@ -218,6 +251,7 @@ JacksCreek10 <- p_desert +
   ggtitle(paste("Jack's Creek","10",sep = " ")) +
   theme_bw(base_size = 14)+
   theme(legend.position = "none")
+
 ggsave(
   JacksCreek10, filename=paste("JacksCreek","10",".png",sep=""),dpi = 400, width = 10, height = 8, units = "in")
 
@@ -226,7 +260,7 @@ data_viz_ll_df_desert_100 <- data_viz_ll_df_desert %>%
 
 JacksCreek100 <-  p_desert + 
   geom_path(data = stream_fort, aes(long, lat, group = group), color = "steelblue2") +
-  geom_point(data = data_viz_ll_df_desert_100, aes(x = XCOORD, y = YCOORD, size = n, alpha = n, fill = C100_thresh), color = "black", shape = 21) +
+  geom_point(data = data_viz_ll_df_desert_100, aes(x = XCOORD, y = YCOORD, size = m, fill = C100_thresh), color = "black", shape = 21) +
   facet_wrap(~run) +
   scale_size_continuous(range = c(2, 6)) +
   scale_fill_manual(values = c("blue", "orange", "red")) +
@@ -246,7 +280,7 @@ data_viz_ll_df_dry_10 <- data_viz_ll_df_dry %>%
 
 DryCreek10 <- p_dry + 
   geom_path(data = stream_fort, aes(long, lat, group = group), color = "steelblue2") +
-  geom_point(data = data_viz_ll_df_dry_10, aes(x = XCOORD, y = YCOORD, size = n, alpha = n, fill = C10_thresh), color = "black", shape = 21) +
+  geom_point(data = data_viz_ll_df_dry_10, aes(x = XCOORD, y = YCOORD, size = m, fill = C10_thresh), color = "black", shape = 21) +
   facet_wrap(~run) +
   scale_size_continuous(range = c(2, 6)) +
   scale_fill_manual(values = c("blue", "orange", "red")) +
@@ -265,7 +299,7 @@ data_viz_ll_df_dry_100 <- data_viz_ll_df_dry %>%
 
 DryCreek100 <-  p_dry + 
   geom_path(data = stream_fort, aes(long, lat, group = group), color = "steelblue2") +
-  geom_point(data = data_viz_ll_df_dry_100, aes(x = XCOORD, y = YCOORD, size = n, alpha = n, fill = C100_thresh), color = "black", shape = 21) +
+  geom_point(data = data_viz_ll_df_dry_100, aes(x = XCOORD, y = YCOORD, size = m, fill = C100_thresh), color = "black", shape = 21) +
   facet_wrap(~run) +
   scale_size_continuous(range = c(2, 6)) +
   scale_fill_manual(values = c("blue", "orange", "red")) +
@@ -286,7 +320,7 @@ data_viz_ll_df_cool_10 <- data_viz_ll_df_cool %>%
 
 KMCreek10 <- p_cool + 
   geom_path(data = stream_fort, aes(long, lat, group = group), color = "steelblue2") +
-  geom_point(data = data_viz_ll_df_cool_10, aes(x = XCOORD, y = YCOORD, size = n, alpha = n, fill = C10_thresh), color = "black", shape = 21) +
+  geom_point(data = data_viz_ll_df_cool_10, aes(x = XCOORD, y = YCOORD, size = m, fill = C10_thresh), color = "black", shape = 21) +
   facet_wrap(~run) +
   scale_size_continuous(range = c(2, 6)) +
   scale_fill_manual(values = c("blue", "orange", "red")) +
@@ -306,7 +340,7 @@ data_viz_ll_df_cool_100 <- data_viz_ll_df_cool %>%
 
 KMCreek100 <-  p_cool + 
   geom_path(data = stream_fort, aes(long, lat, group = group), color = "steelblue2") +
-  geom_point(data = data_viz_ll_df_cool_100, aes(x = XCOORD, y = YCOORD, size = n, alpha = n, fill = C100_thresh), color = "black", shape = 21) +
+  geom_point(data = data_viz_ll_df_cool_100, aes(x = XCOORD, y = YCOORD, size = m, fill = C100_thresh), color = "black", shape = 21) +
   facet_wrap(~run) +
   scale_size_continuous(range = c(2, 6)) +
   scale_fill_manual(values = c("blue", "orange", "red")) +
@@ -351,7 +385,7 @@ ggsave(KMCreek100, filename=paste("KMCreek","100",".png",sep=""),dpi = 400, widt
 #    theme(legend.position = "none") +
 #    ylab("Latitude") +
 #    xlab("Longitude") +
- #   ggtitle(paste("Jacks' Creeks, Year",i,sep = " ")) +
+#   ggtitle(paste("Jacks' Creeks, Year",i,sep = " ")) +
 #    theme_bw(base_size = 14)+
 #    theme(legend.position = "none")
 #  
